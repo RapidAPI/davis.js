@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+* Fix issue with isForPageLoad; Closes [#85](https://github.com/olivernn/davis.js/issues/85).
+* Fix an issue that allows navigating before document is ready; This prevents invoked code from attempting to manipulate the dom before it is ready.
+* General cleanup, adding ending semicolons.
+
 ## 0.9.8
 
 * Fix an issue that prevented params with new lines from being handled properly the hash routing plugin, thanks [maxthelion](https://github.com/maxthelion)

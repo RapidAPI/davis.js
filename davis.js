@@ -1,6 +1,8 @@
 /*!
- * Davis - http://davisjs.com - JavaScript Routing - 0.9.9
+ * Davis - http://davisjs.com - JavaScript Routing - 0.10.0
+ * 
  * Copyright (C) 2011 Oliver Nightingale
+ * Copyright (C) 2014 Nijiko Yonskai
  * MIT Licensed
  */
 ;
@@ -14,19 +16,19 @@
  * @returns {Davis.App}
  */
 Davis = function (config) {
-  var app = new Davis.App
-  config && config.call(app)
-  Davis.$(function () { app.start() })
-  return app
+  var app = new Davis.App;
+  config && config.call(app);
+  Davis.$(function () { app.start() });
+  return app;
 };
 
 /**
  * Stores the DOM library that Davis will use.  Can be overriden to use libraries other than jQuery.
  */
 if (window.jQuery) {
-  Davis.$ = jQuery
+  Davis.$ = jQuery;
 } else {
-  Davis.$ = null
+  Davis.$ = null;
 };
 
 /**
@@ -35,7 +37,7 @@ if (window.jQuery) {
  * @returns {Boolean}
  */
 Davis.supported = function () {
-  return (typeof window.history.pushState == 'function')
+  return (typeof window.history.pushState == 'function');
 }
 
 /*!
@@ -44,7 +46,7 @@ Davis.supported = function () {
  * @private
  * @returns {Function}
  */
-Davis.noop = function () {}
+Davis.noop = function () {};
 
 /**
  * Method to extend the Davis library with an extension.
@@ -59,13 +61,14 @@ Davis.noop = function () {}
  *
  */
 Davis.extend = function (extension) {
-  extension(Davis)
+  extension(Davis);
 }
 
 /*!
  * the version
  */
-Davis.version = "0.9.9";/*!
+Davis.version = "0.10.0";
+/*!
  * Davis - utils
  * Copyright (C) 2011 Oliver Nightingale
  * MIT Licensed
@@ -264,13 +267,13 @@ Davis.listener = function () {
    */
   var originChecks = {
     A: function (elem) {
-      return elem.host !== window.location.host || elem.protocol !== window.location.protocol
+      return elem.host !== window.location.host || elem.protocol !== window.location.protocol;
     },
 
     FORM: function (elem) {
-      var a = document.createElement('a')
-      a.href = elem.action
-      return this.A(a)
+      var a = document.createElement('a');
+      a.href = elem.action;
+      return this.A(a);
     }
   }
 
@@ -281,12 +284,12 @@ Davis.listener = function () {
    * @private
    */
   var differentOrigin = function (elem) {
-    if (!originChecks[elem.nodeName.toUpperCase()]) return true // the elem is neither a link or a form
-    return originChecks[elem.nodeName.toUpperCase()](elem)
+    if (!originChecks[elem.nodeName.toUpperCase()]) return true; // the elem is neither a link or a form
+    return originChecks[elem.nodeName.toUpperCase()](elem);
   }
 
   var hasModifier = function (event) {
-    return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+    return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey);
   }
 
   /*!
@@ -297,13 +300,13 @@ Davis.listener = function () {
    */
   var handler = function (targetExtractor) {
     return function (event) {
-      if (hasModifier(event)) return true
-      if (differentOrigin(this)) return true
+      if (hasModifier(event)) return true;
+      if (differentOrigin(this)) return true;
 
       var request = new Davis.Request (targetExtractor.call(Davis.$(this)));
-      Davis.location.assign(request)
-      event.stopPropagation()
-      event.preventDefault()
+      Davis.location.assign(request);
+      event.stopPropagation();
+      event.preventDefault();
       return false;
     };
   };
@@ -313,14 +316,14 @@ Davis.listener = function () {
    * @private
    */
   var clickHandler = handler(function () {
-    var self = this
+    var self = this;
 
     return {
       method: 'get',
       fullPath: this.prop('href'),
       title: this.attr('title'),
       delegateToServer: function () {
-        window.location = self.prop('href')
+        window.location = self.prop('href');
       }
     };
   });
@@ -330,13 +333,14 @@ Davis.listener = function () {
    * @private
    */
   var submitHandler = handler(function () {
-    var self = this
+    var self = this;
+
     return {
       method: this.attr('method'),
       fullPath: (this.serialize() ? [this.prop('action'), this.serialize()].join("?") : this.prop('action')),
       title: this.attr('title'),
       delegateToServer: function () {
-        self.submit()
+        self.submit();
       }
     };
   });
@@ -350,8 +354,8 @@ Davis.listener = function () {
    * @memberOf listener
    */
   this.listen = function () {
-    Davis.$(document).delegate(this.settings.formSelector, 'submit', submitHandler)
-    Davis.$(document).delegate(this.settings.linkSelector, 'click', clickHandler)
+    Davis.$(document).delegate(this.settings.formSelector, 'submit', submitHandler);
+    Davis.$(document).delegate(this.settings.linkSelector, 'click', clickHandler);
   }
 
   /**
@@ -364,8 +368,8 @@ Davis.listener = function () {
    * @memberOf listener
    */
   this.unlisten = function () {
-    Davis.$(document).undelegate(this.settings.linkSelector, 'click', clickHandler)
-    Davis.$(document).undelegate(this.settings.formSelector, 'submit', submitHandler)
+    Davis.$(document).undelegate(this.settings.linkSelector, 'click', clickHandler);
+    Davis.$(document).undelegate(this.settings.formSelector, 'submit', submitHandler);
   }
 }
 /*!
@@ -464,17 +468,16 @@ Davis.logger = function () {
    * @private
    */
   function prepArgs(args) {
-    var a = Davis.utils.toArray(args)
-    a.unshift(timestamp())
+    var a = Davis.utils.toArray(args);
+    a.unshift(timestamp());
     return a.join(' ');
   }
 
   var logType = function (logLevel) {
     return function () {
       if (window.console) console[logLevel](prepArgs(arguments));
-    }
-  }
-
+    };
+  };
 
   /**
    * Prints an error message to the console if the console is available.
@@ -482,7 +485,7 @@ Davis.logger = function () {
    * @params {String} All arguments are combined and logged to the console.
    * @memberOf logger
    */
-   var error = logType('error')
+   var error = logType('error');
 
   /**
    * Prints an info message to the console if the console is available.
@@ -490,7 +493,7 @@ Davis.logger = function () {
    * @params {String} All arguments are combined and logged to the console.
    * @memberOf logger
    */
-   var info = logType('info')
+   var info = logType('info');
 
   /**
    * Prints a warning message to the console if the console is available.
@@ -498,7 +501,7 @@ Davis.logger = function () {
    * @params {String} All arguments are combined and logged to the console.
    * @memberOf logger
    */
-   var warn = logType('warn')
+   var warn = logType('warn');
 
   /*!
    * Exposes the public methods of the module
@@ -508,8 +511,9 @@ Davis.logger = function () {
     error: error,
     info: info,
     warn: warn
-  }
-}/*!
+  };
+};
+/*!
  * Davis - Route
  * Copyright (C) 2011 Oliver Nightingale
  * MIT Licensed
@@ -523,7 +527,7 @@ Davis.Route = (function () {
   var splatNameRegex = /\*([\w\d]+)/g;
   var splatNameReplacement = "(.*)";
 
-  var nameRegex = /[:|\*]([\w\d]+)/g
+  var nameRegex = /[:|\*]([\w\d]+)/g;
 
 /**
  * Davis.Routes are the main part of a Davis application.  They consist of an HTTP method, a path
@@ -593,7 +597,7 @@ Davis.Route = (function () {
       if (!(method instanceof RegExp)) {
         return new RegExp("^" + method + "$", "i");
       } else {
-        return method
+        return method;
       };
     }
 
@@ -608,7 +612,7 @@ Davis.Route = (function () {
     this.method = convertMethodToRegExp();
 
     if (typeof handlers === 'function') {
-      this.handlers = [handlers]
+      this.handlers = [handlers];
     } else {
       this.handlers = handlers;
     }
@@ -627,7 +631,7 @@ Davis.Route = (function () {
    */
   Route.prototype.match = function (method, path) {
     this.reset();
-    return (this.method.test(method)) && (this.path.test(path))
+    return (this.method.test(method)) && (this.path.test(path));
   }
 
   /**
@@ -663,11 +667,11 @@ Davis.Route = (function () {
 
     var handlers = Davis.utils.map(this.handlers, function (handler, i) {
       return function (req) {
-        return handler.call(req, req, handlers[i+1])
+        return handler.call(req, req, handlers[i+1]);
       }
     })
 
-    return handlers[0](request)
+    return handlers[0](request);
   }
 
   /**
@@ -1259,7 +1263,7 @@ Davis.location = (function () {
    * By default the Davis uses the Davis.history module for its routing, this gives HTML5 based pushState routing
    * which is preferrable over location.hash based routing.
    */
-  var locationDelegate = Davis.history
+  var locationDelegate = Davis.history;
 
   /**
    * Sets the current location delegate.
@@ -1271,7 +1275,7 @@ Davis.location = (function () {
    * @memberOf location
    */
   function setLocationDelegate(delegate) {
-    locationDelegate = delegate
+    locationDelegate = delegate;
   }
 
   /**
@@ -1282,7 +1286,7 @@ Davis.location = (function () {
    * @memberOf location
    */
   function current() {
-    return locationDelegate.current()
+    return locationDelegate.current();
   }
 
   /*!
@@ -1295,8 +1299,8 @@ Davis.location = (function () {
    */
   function sendLocationDelegate (methodName) {
     return function (req, opts) {
-      if (typeof req == 'string') req = new Davis.Request (req)
-      locationDelegate[methodName](req, opts)
+      if (typeof req == 'string') req = new Davis.Request (req);
+      locationDelegate[methodName](req, opts);
     }
   }
 
@@ -1314,7 +1318,7 @@ Davis.location = (function () {
    * @see Davis.Request
    * @memberOf location
    */
-  var assign = sendLocationDelegate('assign')
+  var assign = sendLocationDelegate('assign');
 
   /**
    * Delegates to the locationDelegate.replace method.
@@ -1329,7 +1333,7 @@ Davis.location = (function () {
    * @see Davis.Request
    * @memberOf location
    */
-  var replace = sendLocationDelegate('replace')
+  var replace = sendLocationDelegate('replace');
 
   /**
    * Delegates to the locationDelegate.onChange method.
@@ -1343,7 +1347,7 @@ Davis.location = (function () {
    *
    */
   function onChange(handler) {
-    locationDelegate.onChange(handler)
+    locationDelegate.onChange(handler);
   }
 
   /*!
@@ -1356,51 +1360,60 @@ Davis.location = (function () {
     assign: assign,
     replace: replace,
     onChange: onChange
-  }
-})()
+  };
+})();
 /*!
  * Davis - Request
+ * 
  * Copyright (C) 2011 Oliver Nightingale
+ * Copyright (C) 2014 Nijiko Yonskai
+ * 
  * MIT Licensed
  */
 
 Davis.Request = (function () {
+  /*!
+   * keep track of the first page load that Davis handles, this will be used to determine 
+   * request.isForPageLoad
+   * @private
+   */
+  var isFirstPageLoad = true;
 
-/**
- * Davis.Requests are created from click and submit events.  Davis.Requests are passed to Davis.Routes
- * and are stored in the history stack.  They are instantiated by the Davis.listener module.
- *
- * A request will have a params object which will contain all query params and form params, any named
- * params in a routes path will also be added to the requests params object.  Also included is support
- * for rails style nested form params.
- *
- * By default the request method will be taken from the method attribute for forms or will be defaulted
- * to 'get' for links, however there is support for using a hidden field called _method in your forms
- * to set the correct reqeust method.
- *
- * Simple get requests can be created by just passing a path when initializing a request, to set the method
- * or title you have to pass in an object.
- *
- * Each request will have a timestamp property to make it easier to determine if the application is moving
- * forward or backward through the history stack.
- *
- * Example
- *
- *     var request = new Davis.Request ("/foo/12")
- *
- *     var request = new Davis.Request ("/foo/12", {title: 'foo', method: 'POST'})
- *     
- *     var request = new Davis.Request({
- *       title: "foo",
- *       fullPath: "/foo/12",
- *       method: "get"
- *     })
- *
- * @constructor
- * @param {String} fullPath
- * @param {Object} opts An optional object with a title or method proprty
- *
- */
+  /**
+   * Davis.Requests are created from click and submit events.  Davis.Requests are passed to Davis.Routes
+   * and are stored in the history stack.  They are instantiated by the Davis.listener module.
+   *
+   * A request will have a params object which will contain all query params and form params, any named
+   * params in a routes path will also be added to the requests params object.  Also included is support
+   * for rails style nested form params.
+   *
+   * By default the request method will be taken from the method attribute for forms or will be defaulted
+   * to 'get' for links, however there is support for using a hidden field called _method in your forms
+   * to set the correct reqeust method.
+   *
+   * Simple get requests can be created by just passing a path when initializing a request, to set the method
+   * or title you have to pass in an object.
+   *
+   * Each request will have a timestamp property to make it easier to determine if the application is moving
+   * forward or backward through the history stack.
+   *
+   * Example
+   *
+   *     var request = new Davis.Request ("/foo/12")
+   *
+   *     var request = new Davis.Request ("/foo/12", {title: 'foo', method: 'POST'})
+   *     
+   *     var request = new Davis.Request({
+   *       title: "foo",
+   *       fullPath: "/foo/12",
+   *       method: "get"
+   *     })
+   *
+   * @constructor
+   * @param {String} fullPath
+   * @param {Object} opts An optional object with a title or method proprty
+   *
+   */
   var Request = function (fullPath, opts) {
     if (typeof fullPath == 'object') {
       opts = fullPath
@@ -1467,7 +1480,13 @@ Davis.Request = (function () {
     this.fullPath = raw.fullPath;
 
     this.delegateToServer = raw.delegateToServer || Davis.noop;
-    this.isForPageLoad = raw.forPageLoad || false;
+
+    if (isFirstPageLoad) {
+      isFirstPageLoad = false;
+      this.isForPageLoad = true;
+    } else {
+      this.isForPageLoad = false;
+    }
 
     if (Request.prev) Request.prev.makeStale(this);
     Request.prev = this;
@@ -1598,7 +1617,6 @@ Davis.Request = (function () {
   Request.forPageLoad = function () {
     return new this ({
       method: 'get',
-      // fullPath: window.location.pathname,
       fullPath: Davis.location.current(),
       title: document.title,
       forPageLoad: true
@@ -1754,6 +1772,10 @@ Davis.App = (function () {
     }
 
     var handleRequest = function (request) {
+      if (document.readyState !== 'complete' && !request.isForPageLoad) {
+        return;
+      }
+
       if (beforeFiltersPass(request)) {
         self.trigger('lookupRoute', request)
         var route = self.lookupRoute(request.method, request.path);

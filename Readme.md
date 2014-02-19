@@ -1,5 +1,9 @@
 # Davis.js
 
+## Foreword by Nijiko Yonskai
+
+Davis is no longer maintained by its current owner, this repository is being actively maintained as I use it in many projects due to it's ease of use and functionality.
+
 ## Description
 
 Davis.js is a small JavaScript library using HTML5 history.pushState that allows simple Sinatra style routing for your JavaScript apps.
@@ -49,16 +53,14 @@ To use Davis your html file must be loaded from a server rather than just openin
 
 ## More
 
-[API docs](http://olivernn.github.com/davis.js/docs)
-
-[Example](http://davis-example.heroku.com/notes) using davis.js and a mustache templates shared between the client and the server, [code](http://github.com/olivernn/notepad)
+[API docs](http://nijikokun.github.io/davis.js/docs)
 
 ## Contributing
 
 Contributions are more than welcome, to make the process easier and quicker please follow these guidelines:
 
 * Open an issue detailing the bug fix or feature in your patch.
-* Add test cases for your code.
+* Add test cases for your code when possible.
 * Don't change the version or build new versions as part of you patch.
 
 ## Running examples
@@ -69,4 +71,4 @@ Contributions are more than welcome, to make the process easier and quicker plea
 
 ## Feedback
 
-Any feedback or suggestions are welcome via [issues](https://github.com/olivernn/davis.js/issues).
+Any feedback or suggestions are welcome via [issues](https://github.com/nijikokun/davis.js/issues).
