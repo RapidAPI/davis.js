@@ -1,5 +1,5 @@
 /*!
- * Davis - http://davisjs.com - JavaScript Routing - 0.10.0
+ * Davis - http://davisjs.com - JavaScript Routing - 0.10.1
  * 
  * Copyright (C) 2011 Oliver Nightingale
  * Copyright (C) 2014 Nijiko Yonskai
@@ -67,7 +67,7 @@ Davis.extend = function (extension) {
 /*!
  * the version
  */
-Davis.version = "0.10.0";
+Davis.version = "0.10.1";
 /*!
  * Davis - utils
  * Copyright (C) 2011 Oliver Nightingale
@@ -260,6 +260,7 @@ Davis.utils = (function () {
  * @module
  */
 Davis.listener = function () {
+  var _this = this;
 
   /*!
    * Methods to check whether an element has an href or action that is local to this page
@@ -294,16 +295,22 @@ Davis.listener = function () {
 
   /*!
    * A handler that creates a new Davis.Request and pushes it onto the history stack using Davis.history.
-   * 
+   *
    * @param {Function} targetExtractor a function that will be called with the event target jQuery object and should return an object with path, title and method.
    * @private
    */
   var handler = function (targetExtractor) {
     return function (event) {
+      if (!_this.handleHashRoutes) {
+        if (this.attributes.href.value.indexOf('#') === 0) {
+          return true;
+        }
+      }
+
       if (hasModifier(event)) return true;
       if (differentOrigin(this)) return true;
 
-      var request = new Davis.Request (targetExtractor.call(Davis.$(this)));
+      var request = new Davis.Request(targetExtractor.call(Davis.$(this)));
       Davis.location.assign(request);
       event.stopPropagation();
       event.preventDefault();
@@ -349,7 +356,7 @@ Davis.listener = function () {
    * Binds to both link clicks and form submits using jQuery's deleagate.
    *
    * Will catch all current and future links and forms.  Uses the apps settings for the selector to use for links and forms
-   * 
+   *
    * @see Davis.App.settings
    * @memberOf listener
    */
@@ -1364,16 +1371,16 @@ Davis.location = (function () {
 })();
 /*!
  * Davis - Request
- * 
+ *
  * Copyright (C) 2011 Oliver Nightingale
  * Copyright (C) 2014 Nijiko Yonskai
- * 
+ *
  * MIT Licensed
  */
 
 Davis.Request = (function () {
   /*!
-   * keep track of the first page load that Davis handles, this will be used to determine 
+   * keep track of the first page load that Davis handles, this will be used to determine
    * request.isForPageLoad
    * @private
    */
@@ -1402,7 +1409,7 @@ Davis.Request = (function () {
    *     var request = new Davis.Request ("/foo/12")
    *
    *     var request = new Davis.Request ("/foo/12", {title: 'foo', method: 'POST'})
-   *     
+   *
    *     var request = new Davis.Request({
    *       title: "foo",
    *       fullPath: "/foo/12",
@@ -1476,19 +1483,26 @@ Davis.Request = (function () {
     this.path = raw.fullPath
       .replace(/\?(.|[\r\n])+$/, "")  // Remove the query string
       .replace(/^https?:\/\/[^\/]+/, ""); // Remove the protocol and host parts
-  
+
     this.fullPath = raw.fullPath;
 
     this.delegateToServer = raw.delegateToServer || Davis.noop;
 
-    if (isFirstPageLoad) {
-      isFirstPageLoad = false;
-      this.isForPageLoad = true;
+    if (!raw.forPageLoad) {
+      if (isFirstPageLoad) {
+        isFirstPageLoad = false;
+        this.isForPageLoad = true;
+      } else {
+        this.isForPageLoad = false;
+      }
     } else {
-      this.isForPageLoad = false;
+      this.isForPageLoad = true;
     }
 
-    if (Request.prev) Request.prev.makeStale(this);
+    if (Request.prev) {
+      Request.prev.makeStale(this);
+    }
+
     Request.prev = this;
 
   };
@@ -1564,7 +1578,7 @@ Davis.Request = (function () {
   }
 
   /**
-   * Returns the location or path that should be pushed onto the history stack. 
+   * Returns the location or path that should be pushed onto the history stack.
    *
    * For get requests this will be the same as the path, for post, put, delete and state requests this will
    * be blank as no location should be pushed onto the history stack.
@@ -1608,7 +1622,7 @@ Davis.Request = (function () {
    * Creates a new request for the page on page load.
    *
    * This is required because usually requests are generated from clicking links or submitting forms
-   * however this doesn't happen on a page load but should still be considered a request that the 
+   * however this doesn't happen on a page load but should still be considered a request that the
    * JavaScript app should handle.
    *
    * @returns {Davis.Request} A request representing the current page loading.
