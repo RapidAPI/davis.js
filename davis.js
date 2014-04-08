@@ -1740,6 +1740,9 @@ Davis.App = (function () {
    * by default this is set to false. A Davis.Request will not be generated with the path of the current
    * page.  Setting this to true will cause a request to be passed to your app for the inital page load.
    *
+   * `handleHashRoutes` determines whether elements that use hashes (routes starting with `#`) are
+   * interpreted by Davis.
+   *
    * @see #configure
    */
 
@@ -1748,7 +1751,8 @@ Davis.App = (function () {
     formSelector: 'form',
     throwErrors: true,
     handleRouteNotFound: false,
-    generateRequestOnPageLoad: false
+    generateRequestOnPageLoad: false,
+    handleHashRoutes: false
   };
 
   /**
