@@ -302,8 +302,10 @@ Davis.listener = function () {
   var handler = function (targetExtractor) {
     return function (event) {
       if (!_this.handleHashRoutes) {
-        if (this.attributes.href.value.indexOf('#') === 0) {
-          return true;
+        if (this.attributes.href) {
+          if (this.attributes.href.value.indexOf('#') === 0) {
+            return true;
+          }
         }
       }
 
