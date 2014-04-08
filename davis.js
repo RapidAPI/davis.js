@@ -1488,15 +1488,11 @@ Davis.Request = (function () {
 
     this.delegateToServer = raw.delegateToServer || Davis.noop;
 
-    if (!raw.forPageLoad) {
-      if (isFirstPageLoad) {
-        isFirstPageLoad = false;
-        this.isForPageLoad = true;
-      } else {
-        this.isForPageLoad = false;
-      }
-    } else {
+    if (isFirstPageLoad) {
+      isFirstPageLoad = false;
       this.isForPageLoad = true;
+    } else {
+      this.isForPageLoad = false;
     }
 
     if (Request.prev) {
