@@ -1,5 +1,5 @@
 /*!
- * Davis - http://davisjs.com - JavaScript Routing - 0.10.1
+ * Davis - http://davisjs.com - JavaScript Routing - 0.10.2
  * 
  * Copyright (C) 2011 Oliver Nightingale
  * Copyright (C) 2014 Nijiko Yonskai
@@ -67,7 +67,7 @@ Davis.extend = function (extension) {
 /*!
  * the version
  */
-Davis.version = "0.10.1";
+Davis.version = "0.10.2";
 /*!
  * Davis - utils
  * Copyright (C) 2011 Oliver Nightingale
@@ -1114,7 +1114,7 @@ Davis.history = (function () {
   /*!
    * Add a handler to the push state event.  This event is not a native event but is fired
    * every time a call to pushState is called.
-   * 
+   *
    * @param {Function} handler
    * @private
    */
@@ -1181,13 +1181,14 @@ Davis.history = (function () {
    * returns a function for manipulating the history state and optionally calling any associated
    * pushStateHandlers
    *
+   * @todo Use global settings to determine whether to wrap the data or not.
    * @param {String} methodName the name of the method to manipulate the history state with.
    * @private
    */
   function changeStateWith (methodName) {
     return function (request, opts) {
       popped = true
-      history[methodName](wrapStateData(request.toJSON()), request.title, request.location());
+      history[methodName](null, request.title, request.location());
       if (opts && opts.silent) return
       Davis.utils.forEach(pushStateHandlers, function (handler) {
         handler(request);
